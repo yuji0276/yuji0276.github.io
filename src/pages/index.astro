@@ -20,6 +20,11 @@ const posts = await getSortedPosts();
 			margin: 0;
 			font-size: var(--font-sm);
 		}
+		@media (max-width: 720px) {
+			.hero h1 {
+				font-size: 1.5rem;
+			}
+		}
 	</style>
 	<div class="hero">
 		<h1>kmy blog</h1>
