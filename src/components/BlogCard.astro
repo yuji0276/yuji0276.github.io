@@ -9,7 +9,7 @@ const { post } = Astro.props;
 const { title, pubDate, tags } = post.data;
 ---
 
-<li class="blog-card-item">
+<li class="blog-card-item" data-tags={JSON.stringify(tags)}>
     <a href={`/blog/${post.id}/`} class="blog-card-link">
         <h4 class="blog-card-title">{title}</h4>
         <div class="blog-card-meta">

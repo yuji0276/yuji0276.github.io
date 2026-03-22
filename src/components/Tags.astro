@@ -2,22 +2,116 @@
 import { getCollection } from "astro:content";
 
 const allPosts = await getCollection("blog");
-const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
+const tags = [...new Set(allPosts.map((post) => post.data.tags).flat())].sort();
 const currentTag = Astro.params.tag;
 ---
 
 <div class="tags-container">
     {
         tags.map((tag) => (
-            <a
-                href={`/blog/tag/${tag}`}
+            <button
+                type="button"
                 class:list={["tag-filter", { "tag-filter-active": currentTag === tag }]}
+                data-tag={tag}
             >
                 #{tag}
-            </a>
+            </button>
         ))
     }
 </div>
+
+<script>
+    function initTagFilter() {
+        const tagButtons = document.querySelectorAll<HTMLButtonElement>(".tag-filter");
+        const postItems = document.querySelectorAll<HTMLLIElement>(".blog-card-item");
+        const selectedTags = new Set<string>();
+
+        // Initialize: if a tag is already active (from SSG), add it to selected set
+        tagButtons.forEach((btn) => {
+            if (btn.classList.contains("tag-filter-active")) {
+                selectedTags.add(btn.dataset.tag!);
+            }
+        });
+
+        function filterPosts() {
+            postItems.forEach((item) => {
+                if (selectedTags.size === 0) {
+                    item.style.display = "";
+                    return;
+                }
+                const postTags: string[] = JSON.parse(item.dataset.tags || "[]");
+                const matches = [...selectedTags].every((tag) => postTags.includes(tag));
+                item.style.display = matches ? "" : "none";
+            });
+
+            // Show/hide empty message
+            const visiblePosts = [...postItems].filter((item) => item.style.display !== "none");
+            let emptyMsg = document.querySelector(".tag-empty-message");
+            if (visiblePosts.length === 0 && selectedTags.size > 0) {
+                if (!emptyMsg) {
+                    emptyMsg = document.createElement("p");
+                    emptyMsg.className = "tag-empty-message";
+                    emptyMsg.textContent = "該当する記事がありません";
+                    document.querySelector(".post-list")?.appendChild(emptyMsg);
+                }
+                (emptyMsg as HTMLElement).style.display = "";
+            } else if (emptyMsg) {
+                (emptyMsg as HTMLElement).style.display = "none";
+            }
+        }
+
+        tagButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const tag = btn.dataset.tag!;
+                if (selectedTags.has(tag)) {
+                    selectedTags.delete(tag);
+                    btn.classList.remove("tag-filter-active");
+                } else {
+                    selectedTags.add(tag);
+                    btn.classList.add("tag-filter-active");
+                }
+                filterPosts();
+
+                // Update URL without reload
+                const url = new URL(window.location.href);
+                if (selectedTags.size === 0) {
+                    history.replaceState(null, "", "/blog/");
+                } else if (selectedTags.size === 1) {
+                    const [singleTag] = selectedTags;
+                    history.replaceState(null, "", `/blog/tag/${singleTag}/`);
+                } else {
+                    url.pathname = "/blog/";
+                    url.searchParams.set("tags", [...selectedTags].join(","));
+                    history.replaceState(null, "", url.toString());
+                }
+            });
+        });
+
+        // Handle query param ?tags=tag1,tag2 on page load
+        const urlParams = new URLSearchParams(window.location.search);
+        const tagsParam = urlParams.get("tags");
+        if (tagsParam) {
+            tagsParam.split(",").forEach((tag) => {
+                selectedTags.add(tag);
+                tagButtons.forEach((btn) => {
+                    if (btn.dataset.tag === tag) {
+                        btn.classList.add("tag-filter-active");
+                    }
+                });
+            });
+            filterPosts();
+        }
+
+        // Initial filter if tags are pre-selected (from SSG tag page)
+        if (selectedTags.size > 0 && !tagsParam) {
+            filterPosts();
+        }
+    }
+
+    // Run on initial load and on Astro view transitions
+    initTagFilter();
+    document.addEventListener("astro:after-swap", initTagFilter);
+</script>
 
 <style>
     .tags-container {
@@ -35,6 +129,8 @@ const currentTag = Astro.params.tag;
         border-radius: var(--radius-pill);
         font-size: var(--font-sm);
         transition: all var(--transition);
+        cursor: pointer;
+        font-family: inherit;
     }
     .tag-filter:hover {
         color: var(--accent);
@@ -50,5 +146,14 @@ const currentTag = Astro.params.tag;
         color: #fff;
         background-color: var(--accent-dark);
         border-color: var(--accent-dark);
+    }
+</style>
+
+<style is:global>
+    .tag-empty-message {
+        color: var(--text-muted);
+        text-align: center;
+        padding: 2rem 0;
+        font-size: var(--font-base);
     }
 </style>
