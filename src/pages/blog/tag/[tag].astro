@@ -38,40 +38,42 @@ const { posts } = Astro.props;
             description={SITE_DESCRIPTION}
         />
         <style>
-            .content-grid {
-                display: grid;
-                grid-template-columns: 200px 1fr;
-                gap: 0rem;
-                align-items: start;
+            .page-header {
+                margin-bottom: 1.5rem;
             }
-            @media (max-width: 768px) {
-                .content-grid {
-                    grid-template-columns: 1fr;
-                }
+            .page-header h1 {
+                font-size: 1.8em;
+                margin-bottom: 1rem;
+            }
+            .post-list {
+                padding: 0;
+                margin: 0;
+                list-style: none;
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
             }
         </style>
     </head>
     <body>
         <Header />
         <main>
-            <div class="content-grid">
-                <aside>
-                    <Tags />
-                </aside>
-
-                <ul>
-                    {
-                        posts.map((post) => (
-                            <BlogCard
-                                link={post.id}
-                                title={post.data.title}
-                                date={post.data.pubDate}
-                                tags={post.data.tags}
-                            />
-                        ))
-                    }
-                </ul>
+            <div class="page-header">
+                <h1>#{tag}</h1>
+                <Tags />
             </div>
+            <ul class="post-list">
+                {
+                    posts.map((post) => (
+                        <BlogCard
+                            link={post.id}
+                            title={post.data.title}
+                            date={post.data.pubDate}
+                            tags={post.data.tags}
+                        />
+                    ))
+                }
+            </ul>
         </main>
         <Footer />
     </body>

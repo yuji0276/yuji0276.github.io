@@ -15,43 +15,47 @@ const posts = (await getCollection("blog")).sort(
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			.content-grid {
-				display: grid;
-
-				gap: 0rem;
-				align-items: start;
+			.hero {
+				margin-bottom: 2.5rem;
 			}
-			.content-grid ul {
+			.hero h1 {
+				font-size: 2em;
+				margin-bottom: 0.3rem;
+			}
+			.hero p {
+				color: var(--text-light);
+				margin: 0;
+				font-size: 0.95em;
+			}
+			.post-list {
 				padding: 0;
 				margin: 0;
 				list-style: none;
-			}
-			@media (max-width: 768px) {
-				.content-grid {
-					grid-template-columns: 1fr;
-				}
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>kmy blog</h1>
-			<p>学習したことや、制作したものなどを備忘録として残すブログです</p>
-			<div class="content-grid">
-				<ul>
-					{
-						posts.map((post) => (
-							<BlogCard
-								link={post.id}
-								title={post.data.title}
-								date={post.data.pubDate}
-								tags={post.data.tags}
-							/>
-						))
-					}
-				</ul>
+			<div class="hero">
+				<h1>kmy blog</h1>
+				<p>学習したことや、制作したものなどを備忘録として残すブログです</p>
 			</div>
+			<ul class="post-list">
+				{
+					posts.map((post) => (
+						<BlogCard
+							link={post.id}
+							title={post.data.title}
+							date={post.data.pubDate}
+							tags={post.data.tags}
+						/>
+					))
+				}
+			</ul>
 		</main>
 		<Footer />
 	</body>

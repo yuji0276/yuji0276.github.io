@@ -13,70 +13,96 @@ import { Image } from "astro:assets";
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			h2 {
-				font-weight: bold;
-				margin: 0 20vw;
-				padding: 1rem;
-				border-bottom: 1px solid #e6e7eb;
+			.page-header {
+				margin-bottom: 2rem;
 			}
-			h3 {
-				font-weight: bold;
-				padding: 1rem 0 0.5rem 0;
+			.page-header h1 {
+				font-size: 1.8em;
 			}
-			.auther {
-				font-weight: bold;
-				white-space: nowrap;
-			}
-			.page-layout {
-				margin: 5rem 20vw 0;
+			.profile {
 				display: flex;
-				gap: 10rem;
+				gap: 3rem;
+				align-items: flex-start;
 			}
 			.icon-container {
+				flex-shrink: 0;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 			}
+			.icon-container img {
+				border-radius: 50%;
+				border: 3px solid var(--border);
+			}
+			.author-name {
+				font-weight: 700;
+				margin-top: 0.75rem;
+				color: var(--text);
+				font-size: 0.95em;
+			}
+			.bio h3 {
+				font-size: 1.1em;
+				margin-top: 1.5rem;
+				margin-bottom: 0.5rem;
+				color: var(--text);
+			}
+			.bio h3:first-child {
+				margin-top: 0;
+			}
+			.bio p {
+				color: var(--text-light);
+				font-size: 0.95em;
+				line-height: 1.9;
+			}
+			.bio ul {
+				color: var(--text-light);
+				font-size: 0.95em;
+				padding-left: 1.2em;
+			}
+			.bio li {
+				margin-bottom: 0.3em;
+			}
 			@media (max-width: 768px) {
-				h2 {
-					margin: 0 1rem;
-				}
-				.page-layout {
-					margin: 2rem 1rem 0;
+				.profile {
 					flex-direction: column;
-					gap: 2rem;
+					align-items: center;
+					gap: 1.5rem;
 				}
 				.icon-container img {
-					width: 200px;
-					height: auto;
+					width: 180px;
+					height: 180px;
 				}
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
-		<h2>About</h2>
-		<div class="page-layout">
-			<div class="icon-container">
-				<Image src={profileIcon} width={400} height={400} alt="icon" />
-				<p class="auther">kmy(かみー)</p>
+		<main>
+			<div class="page-header">
+				<h1>About</h1>
 			</div>
-			<div>
-				<h3>本サイトについて</h3>
-				<p>本サイトはしがない数学科が運営しているブログです。</p>
-				<p>
-					プログラミング歴一年ほどの初心者が本などで得た知識を置いておく備忘録にするつもりです。自分の得た知識が皆さんの糧になってくれたら嬉しいです
-				</p>
-				<p>
-					高校時代に両親からノートパソコンを買ってもらったことがきっかけでプログラミングに興味を持ちました。小さな挫折と成功を繰り返してちょっとずつ進化していけたらいいなと思っています
-				</p>
-				<h3>その他</h3>
-				<ul>
-					<li>大阪公立大学理学部数学科</li>
-					<li>大阪公立大学プログラミングサークル Code Gate?所属</li>
-				</ul>
+			<div class="profile">
+				<div class="icon-container">
+					<Image src={profileIcon} width={220} height={220} alt="icon" />
+					<p class="author-name">kmy(かみー)</p>
+				</div>
+				<div class="bio">
+					<h3>本サイトについて</h3>
+					<p>本サイトはしがない数学科が運営しているブログです。</p>
+					<p>
+						プログラミング歴一年ほどの初心者が本などで得た知識を置いておく備忘録にするつもりです。自分の得た知識が皆さんの糧になってくれたら嬉しいです
+					</p>
+					<p>
+						高校時代に両親からノートパソコンを買ってもらったことがきっかけでプログラミングに興味を持ちました。小さな挫折と成功を繰り返してちょっとずつ進化していけたらいいなと思っています
+					</p>
+					<h3>その他</h3>
+					<ul>
+						<li>大阪公立大学理学部数学科</li>
+						<li>大阪公立大学プログラミングサークル Code Gate?所属</li>
+					</ul>
+				</div>
 			</div>
-		</div>
+		</main>
 		<Footer />
 	</body>
 </html>
