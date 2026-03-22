@@ -1,24 +1,23 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import FormattedDate from "@/components/FormattedDate.astro";
 
 interface Props {
-    link: string;
-    title: string;
-    date: Date;
-    tags: string[];
+    post: CollectionEntry<"blog">;
 }
-const { link, title, date, tags } = Astro.props;
+const { post } = Astro.props;
+const { title, pubDate, tags } = post.data;
 ---
 
 <li class="blog-card-item">
-    <a href={`/blog/${link}/`} class="blog-card-link">
+    <a href={`/blog/${post.id}/`} class="blog-card-link">
         <h4 class="blog-card-title">{title}</h4>
         <div class="blog-card-meta">
             <div class="blog-card-date">
-                <FormattedDate date={date} />
+                <FormattedDate date={pubDate} />
             </div>
-            <div class="tags">
-                {tags.map((tag) => <span class="tag">#{tag}</span>)}
+            <div class="blog-card-tags">
+                {tags.map((tag) => <span class="tag-badge">#{tag}</span>)}
             </div>
         </div>
     </a>
@@ -53,7 +52,7 @@ const { link, title, date, tags } = Astro.props;
     }
 
     .blog-card-title {
-        font-size: 1.15rem;
+        font-size: var(--font-lg);
         font-weight: 700;
         margin: 0 0 0.75rem 0;
         color: var(--text);
@@ -68,23 +67,13 @@ const { link, title, date, tags } = Astro.props;
     }
 
     .blog-card-date {
-        font-size: 0.82rem;
+        font-size: var(--font-sm);
         color: var(--text-muted);
     }
 
-    .tags {
+    .blog-card-tags {
         display: flex;
         flex-wrap: wrap;
         gap: 0.35rem;
-    }
-
-    .tag {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--accent);
-        background-color: var(--accent-subtle);
-        padding: 0.2rem 0.55rem;
-        border-radius: 9999px;
-        line-height: 1.4;
     }
 </style>

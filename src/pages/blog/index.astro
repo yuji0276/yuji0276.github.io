@@ -1,59 +1,18 @@
 ---
-import { getCollection } from "astro:content";
-import BaseHead from "@/components/BaseHead.astro";
-import Footer from "@/components/Footer.astro";
-import Header from "@/components/Header.astro";
-import { SITE_DESCRIPTION, SITE_TITLE } from "@/consts";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 import BlogCard from "@/components/BlogCard.astro";
 import Tags from "@/components/Tags.astro";
+import { getSortedPosts } from "@/lib/posts";
 
-const posts = (await getCollection("blog")).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const posts = await getSortedPosts();
 ---
 
-<!doctype html>
-<html lang="ja">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			.page-header {
-				margin-bottom: 1.5rem;
-			}
-			.page-header h1 {
-				font-size: 1.8em;
-				margin-bottom: 1rem;
-			}
-			.post-list {
-				padding: 0;
-				margin: 0;
-				list-style: none;
-				display: flex;
-				flex-direction: column;
-				gap: 0.75rem;
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<div class="page-header">
-				<h1>Blog</h1>
-				<Tags />
-			</div>
-			<ul class="post-list">
-				{
-					posts.map((post) => (
-						<BlogCard
-							link={post.id}
-							title={post.data.title}
-							date={post.data.pubDate}
-							tags={post.data.tags}
-						/>
-					))
-				}
-			</ul>
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout>
+	<div class="page-header">
+		<h1>Blog</h1>
+		<Tags />
+	</div>
+	<ul class="post-list">
+		{posts.map((post) => <BlogCard post={post} />)}
+	</ul>
+</BaseLayout>

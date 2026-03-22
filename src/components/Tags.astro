@@ -11,7 +11,7 @@ const currentTag = Astro.params.tag;
         tags.map((tag) => (
             <a
                 href={`/blog/tag/${tag}`}
-                class:list={["tag", { "tag-active": currentTag === tag }]}
+                class:list={["tag-filter", { "tag-filter-active": currentTag === tag }]}
             >
                 #{tag}
             </a>
@@ -26,27 +26,27 @@ const currentTag = Astro.params.tag;
         gap: 0.4rem;
         margin-bottom: 1.5rem;
     }
-    .tag {
+    .tag-filter {
         color: var(--text-light);
         text-decoration: none;
         background-color: var(--bg-card);
         border: 1px solid var(--border);
-        padding: 0.35em 0.85em;
-        border-radius: 9999px;
-        font-size: 0.82em;
+        padding: 0.35rem 0.85rem;
+        border-radius: var(--radius-pill);
+        font-size: var(--font-sm);
         transition: all var(--transition);
     }
-    .tag:hover {
+    .tag-filter:hover {
         color: var(--accent);
         border-color: var(--accent-light);
         background-color: var(--accent-subtle);
     }
-    .tag-active {
+    .tag-filter-active {
         color: #fff;
         background-color: var(--accent);
         border-color: var(--accent);
     }
-    .tag-active:hover {
+    .tag-filter-active:hover {
         color: #fff;
         background-color: var(--accent-dark);
         border-color: var(--accent-dark);
